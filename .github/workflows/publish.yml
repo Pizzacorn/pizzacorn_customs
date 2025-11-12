@@ -3,7 +3,7 @@ name: Publish to pub.dev on push
 on:
   push:
     branches:
-      - main           # cámbialo si tu rama principal no es main
+      - master           # cámbialo si tu rama principal no es main
     paths:
       - 'pubspec.yaml'
       - 'lib/**'
