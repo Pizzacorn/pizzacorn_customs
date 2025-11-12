@@ -11,10 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Dart suficiente para 'dart pub publish'
-      - uses: dart-lang/setup-dart@v1
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
 
-      # Carga credenciales desde el secret
       - name: Set pub.dev credentials
         run: |
           mkdir -p ~/.pub-cache
@@ -22,7 +23,10 @@ jobs:
         env:
           PUB_CREDENTIALS: ${{ secrets.PUB_CREDENTIALS }}
 
-      # Publicación directa
+      - name: Get deps
+        run: flutter pub get
+        # working-directory: ./ruta/al/paquete  # ← descomenta si no está en la raíz
+
       - name: Publish
-        run: dart pub publish --force
-        # working-directory: ./ruta/al/paquete   # <- descomenta si tu paquete no está en la raíz
+        run: flutter pub publish --force
+        # working-directory: ./ruta/al/paquete  # ← descomenta si no está en la raíz
