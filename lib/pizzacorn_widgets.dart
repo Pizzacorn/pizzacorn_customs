@@ -1,5 +1,4 @@
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+library pizzacorn_widgets;
+
+/// Exporta las APIs públicas del paquete.
+export 'src/textfield_custom.dart';
