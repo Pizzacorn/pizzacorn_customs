@@ -1,33 +1,20 @@
-name: Publish to pub.dev on push
+name: Publish to pub.dev (minimal)
 
 on:
   push:
-    branches:
-      - master           # cámbialo si tu rama principal no es main
-    paths:
-      - 'pubspec.yaml'
-      - 'lib/**'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - 'LICENSE'
-  workflow_dispatch:    # por si quieres lanzarlo a mano también
+    branches: [ master ]   # cámbialo a main si toca
+  workflow_dispatch:
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
+      # Dart suficiente para 'dart pub publish'
+      - uses: dart-lang/setup-dart@v1
 
-      - name: Flutter pub get
-        run: flutter pub get
-
+      # Carga credenciales desde el secret
       - name: Set pub.dev credentials
         run: |
           mkdir -p ~/.pub-cache
@@ -35,23 +22,7 @@ jobs:
         env:
           PUB_CREDENTIALS: ${{ secrets.PUB_CREDENTIALS }}
 
-      - name: Show version from pubspec
-        run: |
-          VERSION=$(grep -E "^version:" pubspec.yaml | awk '{print $2}')
-          echo "📦 Version in pubspec.yaml: $VERSION"
-
-      - name: Dry run
-        run: dart pub publish --dry-run
-
-      # Publica siempre en cada push; si la versión ya existe, no falla el job.
-      - name: Publish to pub.dev (skip if already exists)
-        run: |
-          set +e
-          OUTPUT=$(dart pub publish --force 2>&1)
-          EXIT=$?
-          echo "$OUTPUT"
-          if [ $EXIT -ne 0 ] && echo "$OUTPUT" | grep -qi "already exists"; then
-            echo "✅ Version ya publicada en pub.dev. Se omite sin fallar."
-            exit 0
-          fi
-          exit $EXIT
+      # Publicación directa
+      - name: Publish
+        run: dart pub publish --force
+        # working-directory: ./ruta/al/paquete   # <- descomenta si tu paquete no está en la raíz
