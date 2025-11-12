@@ -2,7 +2,7 @@ name: Publish to pub.dev (minimal)
 
 on:
   push:
-    branches: [ master ]   # cambia a main si toca
+    branches: [ master ]   # cámbialo a main si es tu rama principal
   workflow_dispatch:
 
 jobs:
@@ -16,17 +16,28 @@ jobs:
         with:
           channel: stable
 
+      # Restaura credenciales en TODAS las rutas habituales
       - name: Restore pub.dev credentials
         env:
           PUB_CREDENTIALS_B64: ${{ secrets.PUB_CREDENTIALS_B64 }}
         run: |
-          mkdir -p ~/.pub-cache
-          echo "$PUB_CREDENTIALS_B64" | base64 -d > ~/.pub-cache/credentials.json
+          set -e
+          export PUB_CACHE="$HOME/.pub-cache"
+          mkdir -p "$PUB_CACHE"
+          mkdir -p "$HOME/.config/dart"
+          echo "$PUB_CREDENTIALS_B64" | base64 -d | tee "$PUB_CACHE/credentials.json" > "$HOME/.config/dart/pub-credentials.json"
+          chmod 600 "$PUB_CACHE/credentials.json" "$HOME/.config/dart/pub-credentials.json"
 
       - name: Get deps
-        run: flutter pub get
-        # working-directory: ./ruta/al/paquete
+        env:
+          PUB_CACHE: ${{ github.runner.temp }}/.pub-cache
+        run: |
+          # opcional: usar cache separada de pub
+          mkdir -p "$PUB_CACHE"
+          flutter pub get
 
       - name: Publish
+        env:
+          PUB_CACHE: ${{ github.runner.temp }}/.pub-cache
         run: flutter pub publish --force
-        # working-directory: ./ruta/al/paquete
+        # working-directory: ./ruta/al/paquete  # ← descomenta si tu package no está en la raíz
