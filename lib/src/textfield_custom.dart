@@ -29,7 +29,7 @@ class TextFieldCustom extends StatefulWidget {
   final Iterable<String>? autofillHints;
 
   // Apariencia / layout
-  final bool obscureText;        // Para password
+  final bool obscureText; // Para password
   final bool showPasswordToggle; // Si quieres botón de mostrar/ocultar
   final int minLines;
   final int maxLines;
@@ -124,10 +124,24 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
     final scheme = theme.colorScheme;
 
     final baseTextStyle = widget.textStyle ?? theme.textTheme.bodyMedium;
-    final hintStyle = widget.hintStyle ?? theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurface.withOpacity(0.6));
-    final labelStyle = widget.labelStyle ?? theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurface.withOpacity(0.7));
-    final helperStyle = widget.helperStyle ?? theme.textTheme.bodySmall?.copyWith(color: scheme.onSurface.withOpacity(0.6));
-    final errorStyle  = widget.errorStyle  ?? theme.textTheme.bodySmall?.copyWith(color: scheme.error);
+    final hintStyle =
+        widget.hintStyle ??
+        theme.textTheme.bodyMedium?.copyWith(
+          color: scheme.onSurface.withOpacity(0.6),
+        );
+    final labelStyle =
+        widget.labelStyle ??
+        theme.textTheme.bodyMedium?.copyWith(
+          color: scheme.onSurface.withOpacity(0.7),
+        );
+    final helperStyle =
+        widget.helperStyle ??
+        theme.textTheme.bodySmall?.copyWith(
+          color: scheme.onSurface.withOpacity(0.6),
+        );
+    final errorStyle =
+        widget.errorStyle ??
+        theme.textTheme.bodySmall?.copyWith(color: scheme.error);
 
     final outline = OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
@@ -208,9 +222,13 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
 
         isDense: true,
         filled: widget.filled,
-        fillColor: widget.fillColor ?? scheme.surfaceVariant.withOpacity(widget.filled ? 1 : 0),
+        fillColor:
+            widget.fillColor ??
+            scheme.surfaceVariant.withOpacity(widget.filled ? 1 : 0),
 
-        contentPadding: widget.contentPadding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding:
+            widget.contentPadding ??
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
 
         border: outline,
         enabledBorder: outline,
